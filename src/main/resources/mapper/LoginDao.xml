@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu.software.chatroom.user.login.dao.LoginDao">
+	<select id="selectUserCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user
+		WHERE u_name = #{u_name} AND u_pwd = #{u_pwd};
+	</select>
+	
+	<select id="selectU_idByU_name" resultType="Integer">
+		SELECT u_id
+		FROM t_user
+		WHERE u_name = #{u_name}
+	</select>
+
+</mapper>
