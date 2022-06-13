@@ -92,13 +92,13 @@ public class SocketIOServiceImpl implements SocketIOService {
 
             if (message.getType().equals(Constants.MASTER_MESSAGE)) {
                 //使用公钥加密传送会话密钥
-                String sign = new String(RSAUtils.sign(message.getContent(), RSAUtils.getPrivateKey()), "ISO-8859-1");
-                message.setSign(sign);
                 if (AesKey.equals("")) {
+                    log.info("用户" + sender_name + "生成会话密钥");
                     AesKey = AESUtils.genAesSecret();
                     message.setContent(AesKey);
-                    log.info("用户" + sender_name + "生成会话密钥");
                     log.info("用户" + sender_name + "使用用户" + sender_name + "的私钥对会话密钥进行签名");
+                    String sign = new String(RSAUtils.sign(message.getContent(), RSAUtils.getPrivateKey()), "ISO-8859-1");
+                    message.setSign(sign);
                     String result = RSAUtils.encrypt(message.getContent(), publicKeyStringMap.get(receiver_name));
                     log.info("使用用户" + receiver_name + "的公钥对会话密钥进行加密：" + result);
                     message.setContent(result);
@@ -130,17 +130,17 @@ public class SocketIOServiceImpl implements SocketIOService {
             String receiver_name = message.getReceiver_name();
             if (message.getType().equals(Constants.MASTER_MESSAGE)) {
                 log.info("收到来自" + sender_name + "发送给" + message.getReceiver_name() + "的消息: " + message.getContent());
+                String result = RSAUtils.decrypt(message.getContent(), RSAUtils.getKeyPair().get("PR"));
+                log.info("用户" + receiver_name + "使用用户" + receiver_name + "的私钥对消息进行解密：");
+                message.setContent(result);
                 log.info("用户" + receiver_name + "使用用户" + sender_name + "的公钥对消息进行验证签名");
-//            Boolean sign = (RSAUtils.verify(message.getContent(), message.getSign().getBytes("ISO-8859-1"), publicKeyMap.get(sender_name)));
-                Boolean sign = true;
+                Boolean sign = (RSAUtils.verify(message.getContent(), message.getSign().getBytes("ISO-8859-1"), publicKeyMap.get(sender_name)));
                 if (sign) {
                     log.info("签名验证成功！身份无误");
                 } else {
                     throw new Exception("签名错误！");
                 }
-                String result = RSAUtils.decrypt(message.getContent(), RSAUtils.getKeyPair().get("PR"));
-                log.info("用户" + receiver_name + "使用用户" + receiver_name + "的私钥对消息进行解密：" + result);
-                message.setContent(result);
+
                 receiveMessageFromFriend(message.getReceiver_name(), message);
             } else {
                 log.info("收到来自" + sender_name + "发送给" + message.getReceiver_name() + "的消息: " + message.getContent());
