@@ -1,0 +1,37 @@
+server:
+    port: 8000
+socketio:
+    host: 127.0.0.1
+    port: 8888
+    maxFramePayloadLength: 1048576
+    maxHttpContextLength: 1048576
+    bossCount: 1
+    workCount: 100
+    allowCustomRequests: true
+    upgradeTimeout: 1000000
+    pingTimeout: 6000000
+    pingInterval: 25000
+logging:
+    level:
+        stu.softwarec.chatroom: debug
+        root: info
+        web: trace
+
+mybatis:
+    mapper-locations: /mapper/**/*.xml
+software:
+    token:
+        claim-userid-name: UserID
+        expired: 10000
+        header-name: Token
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: yjqlovemhy520@mhy
+        url: jdbc:mysql://121.5.254.108/safechat
+        username: root
+    servlet:
+        multipart:
+          max-file-size: 30MB
+          max-request-size: 30MB

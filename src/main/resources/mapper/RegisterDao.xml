@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu.software.chatroom.user.register.dao.RegisterDao">
+	<select id="selectMaxU_id" resultType="java.lang.Integer">
+		SELECT ifnull(MAX(u_id), 0)
+		FROM t_user
+	</select>
+	
+	<select id="selectUserCountByU_name" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM t_user
+		WHERE u_name = #{u_name}
+	</select>
+	
+	<insert id="insertUser">
+		INSERT INTO t_user(u_id, u_name, u_pwd, u_avatar)
+		VALUES(#{u_id}, #{u_name}, #{u_pwd}, #{u_avatar})
+	</insert>
+</mapper>
